@@ -6,11 +6,11 @@ class SubscriptionManager:
         self.subscriptions = self.load_subscriptions()
     
     def load_subscriptions(self):
-        with open(self.subscriptions_file, 'r') as f:
+        with open(f'../{self.subscriptions_file}', 'r') as f: # subcriptions.json位于脚本文件的上级目录中
             return json.load(f)
     
     def save_subscriptions(self):
-        with open(self.subscriptions_file, 'w') as f:
+        with open(f'../{self.subscriptions_file}', 'w') as f: # subcriptions.json位于脚本文件的上级目录中
             json.dump(self.subscriptions, f, indent=4)
     
     def list_subscriptions(self):
