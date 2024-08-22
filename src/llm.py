@@ -35,7 +35,7 @@ class LLM:
         try:
             # 调用OpenAI GPT模型生成报告
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",  # 指定使用的模型版本
+                model="gpt-4o-mini",  # 修改使用的模型版本
                 messages=[
                     {"role": "system", "content": system_prompt},  # 提交系统角色的消息
                     {"role": "user", "content": user_prompt}  # 提交用户角色的消息
