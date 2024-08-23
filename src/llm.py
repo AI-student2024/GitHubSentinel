@@ -5,8 +5,10 @@ from logger import LOG  # 导入日志模块
 
 class LLM:
     def __init__(self):
-        # 创建一个OpenAI客户端实例
-        self.client = OpenAI()
+        # 【修改1】创建一个OpenAI客户端实例，使用环境变量中的API密钥和自定义的API端点
+        self.client = OpenAI(api_key=os.getenv('WildtoOpenAI'),
+                            base_url="https://api.gptsapi.net/v1"
+                            )
         # 从TXT文件加载提示信息
         with open("prompts/report_prompt.txt", "r", encoding='utf-8') as file:
             self.system_prompt = file.read()
