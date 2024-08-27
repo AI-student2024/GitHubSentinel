@@ -1,18 +1,19 @@
 # GitHub Sentinel
 
 <p align="center">
-    <br> English | <a href="README.md">中文</a>
+    <br> <a href="README.md">中文</a> | English
 </p>
 
-GitHub Sentinel is an open-source tool AI Agent designed for developers and project managers. It automatically retrieves and aggregates updates from subscribed GitHub repositories on a regular basis (daily/weekly). Key features include subscription management, update retrieval, notification system, and report generation.
+GitHub Sentinel is an open-source AI-powered tool designed for developers and project managers. It automatically retrieves and summarizes updates from subscribed GitHub repositories on a daily/weekly basis. The main features include subscription management, update retrieval, notification system, and report generation.
 
 ## Features
-- Subscription management
-- Update retrieval
-- Notification system
-- Report generation
+- Subscription Management
+- Update Retrieval
+- Notification System
+- Report Generation
+- **Hacker News Reports**: Generates daily technology trend reports and sends notifications
 
-## Getting Started
+## Quick Start
 
 ### 1. Install Dependencies
 
@@ -24,8 +25,7 @@ pip install -r requirements.txt
 
 ### 2. Configure the Application
 
-Edit the `config.json` file to set up your GitHub token, Email settings(e.g.Tencent Exmail), subscription file, and update settings:
-
+Edit the `config.json` file to set your GitHub Token, Email settings (example with Tencent Enterprise Email), subscription file, and update settings:
 
 ```json
 {
@@ -40,11 +40,13 @@ Edit the `config.json` file to set up your GitHub token, Email settings(e.g.Tenc
     "slack_webhook_url": "your_slack_webhook_url",
     "subscriptions_file": "subscriptions.json",
     "github_progress_frequency_days": 1,
-    "github_progress_execution_time":"08:00"
+    "github_progress_execution_time":"08:00",
+    "hackernews_frequency_days": 1,
+    "hackernews_execution_time": "08:00"
 }
-
 ```
-**For security reasons:** It is recommended to configure the GitHub Token and Email Password using environment variables to avoid storing sensitive information in plain text, as shown below:
+
+**For security reasons:** It is recommended to configure GitHub Token and Email Password using environment variables to avoid storing sensitive information in plain text, as shown below:
 
 ```shell
 # GitHub
@@ -55,46 +57,46 @@ export EMAIL_PASSWORD="password"
 
 ### 3. How to Run
 
-GitHub Sentinel supports the following three modes of operation:
+GitHub Sentinel supports three running modes:
 
-#### A. Run as a Command-Line Tool
+#### A. Running as a Command-Line Tool
 
-You can interactively run the application from the command line:
+You can run the application interactively from the command line:
 
 ```sh
 python src/command_tool.py
 ```
 
-In this mode, you can manually enter commands to manage subscriptions, retrieve updates, and generate reports.
+In this mode, you can manually input commands to manage subscriptions, retrieve updates, and generate reports.
 
-#### B. Run as a Background Service
+#### B. Running as a Background Service
 
-To run the application as a background service (daemon), it will automatically update according to the configured schedule.
+To run the application as a background service (daemon), it will automatically update according to the relevant configuration on a regular basis.
 
-You can use the daemon management script [daemon_control.sh](daemon_control.sh) to start, check the status, stop, and restart:
+You can directly use the daemon management script [daemon_control.sh](daemon_control.sh) to start, check status, stop, and restart:
 
 1. Start the service:
 
     ```sh
-    $ ./daemon_control.sh start
+    ./daemon_control.sh start
     Starting DaemonProcess...
     DaemonProcess started.
     ```
 
-   - This will launch [./src/daemon_process.py], generating reports periodically as set in `config.json`, and sending emails.
-   - Service logs will be saved to `logs/DaemonProcess.log`, with historical logs also appended to `logs/app.log`.
+   - This will start `./src/daemon_process.py`, generating reports and sending emails regularly according to the update frequency and timing set in `config.json`.
+   - The logs for this service will be saved to the `logs/DaemonProcess.log` file. At the same time, cumulative historical logs will be appended to the `logs/app.log` log file.
 
-2. Check the service status:
+2. Check service status:
 
     ```sh
-    $ ./daemon_control.sh status
+    ./daemon_control.sh status
     DaemonProcess is running.
     ```
 
 3. Stop the service:
 
     ```sh
-    $ ./daemon_control.sh stop
+    ./daemon_control.sh stop
     Stopping DaemonProcess...
     DaemonProcess stopped.
     ```
@@ -102,16 +104,16 @@ You can use the daemon management script [daemon_control.sh](daemon_control.sh) 
 4. Restart the service:
 
     ```sh
-    $ ./daemon_control.sh restart
+    ./daemon_control.sh restart
     Stopping DaemonProcess...
     DaemonProcess stopped.
     Starting DaemonProcess...
     DaemonProcess started.
     ```
 
-#### C. Run as a Gradio Server
+#### C. Running as a Gradio Server
 
-To run the application with a Gradio interface, allowing users to interact with the tool via a web interface:
+To run the application using the Gradio interface, which allows users to interact with the tool via a web interface:
 
 ```sh
 python src/gradio_server.py
@@ -119,3 +121,4 @@ python src/gradio_server.py
 
 - This will start a web server on your machine, allowing you to manage subscriptions and generate reports through a user-friendly interface.
 - By default, the Gradio server will be accessible at `http://localhost:7860`, but you can share it publicly if needed.
+

@@ -11,6 +11,7 @@ GitHub Sentinel 是一个开源的工具 AI 代理，专为开发人员和项目
 - 更新检索
 - 通知系统
 - 报告生成
+- **Hacker News 报告**：每日生成最新技术趋势报告并发送通知
 
 ## 快速开始
 
@@ -39,13 +40,16 @@ pip install -r requirements.txt
     "slack_webhook_url": "your_slack_webhook_url",
     "subscriptions_file": "subscriptions.json",
     "github_progress_frequency_days": 1,
-    "github_progress_execution_time":"08:00"
+    "github_progress_execution_time":"08:00",
+    "hackernews_frequency_days": 1,
+    "hackernews_execution_time": "08:00"
 }
 ```
+
 **出于安全考虑:** GitHub Token 和 Email Password 的设置均支持使用环境变量进行配置，以避免明文配置重要信息，如下所示：
 
 ```shell
-# Github
+# GitHub
 export GITHUB_TOKEN="github_pat_xxx"
 # Email
 export EMAIL_PASSWORD="password"
@@ -74,25 +78,25 @@ python src/command_tool.py
 1. 启动服务：
 
     ```sh
-    $ ./daemon_control.sh start
+    ./daemon_control.sh start
     Starting DaemonProcess...
     DaemonProcess started.
     ```
 
-   - 这将启动[./src/daemon_process.py]，按照 `config.json` 中设置的更新频率和时间点定期生成报告，并发送邮件。
+   - 这将启动 `./src/daemon_process.py`，按照 `config.json` 中设置的更新频率和时间点定期生成报告，并发送邮件。
    - 本次服务日志将保存到 `logs/DaemonProcess.log` 文件中。同时，历史累计日志也将同步追加到 `logs/app.log` 日志文件中。
 
 2. 查询服务状态：
 
     ```sh
-    $ ./daemon_control.sh status
+    ./daemon_control.sh status
     DaemonProcess is running.
     ```
 
 3. 关闭服务：
 
     ```sh
-    $ ./daemon_control.sh stop
+    ./daemon_control.sh stop
     Stopping DaemonProcess...
     DaemonProcess stopped.
     ```
@@ -100,13 +104,13 @@ python src/command_tool.py
 4. 重启服务：
 
     ```sh
-    $ ./daemon_control.sh restart
+    ./daemon_control.sh restart
     Stopping DaemonProcess...
     DaemonProcess stopped.
     Starting DaemonProcess...
     DaemonProcess started.
     ```
-    
+
 #### C. 作为 Gradio 服务器运行
 
 要使用 Gradio 界面运行应用，允许用户通过 Web 界面与该工具交互：

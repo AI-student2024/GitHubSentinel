@@ -1,14 +1,23 @@
 {
+    "_comment": "GitHub API 访问令牌，建议通过环境变量配置",
     "github_token": "${GITHUB_TOKEN}",
-    "email":  {
-        "smtp_server": "smtp.exmail.qq.com",
+
+    "email": {
+        "_comment": "SMTP 服务器配置",
+        "smtp_server": "smtp.exmail.qq.com",  
         "smtp_port": 465,
         "from": "pjt@zaijidata.com",
+        "_comment_password": "发件人邮箱密码，建议通过环境变量EMAIL_PASSWORD配置",
         "password": "",
         "to": "test@zaijidata.com"
     },
-    "slack_webhook_url": "your_slack_webhook_url",
+
+    "_comment_subscriptions": "GitHub 仓库订阅列表文件路径",
     "subscriptions_file": "subscriptions.json",
+
+    "_comment_report": "报告生成频率和时间配置",
     "github_progress_frequency_days": 1,
-    "github_progress_execution_time":"08:00"
+    "github_progress_execution_time": "08:00",
+    "hackernews_frequency_days": 1,
+    "hackernews_execution_time": "08:00"
 }
