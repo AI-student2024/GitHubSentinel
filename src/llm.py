@@ -42,6 +42,8 @@ class LLM:
             {"role": "user", "content": markdown_content},
         ]
 
+        print("Messages sent to OpenAI API:", messages)  # 打印发送的消息内容
+
         if dry_run:
             # 如果启用了 dry run 模式，将提示信息保存到文件中
             self._save_prompt(messages, "daily_progress/prompt.txt")

@@ -100,17 +100,29 @@ class ReportGenerator:
         return report, report_file_path  # 返回报告内容及保存路径
 
     def generate_hackernews_report(self, news_content):
-        """
-        生成 Hacker News 技术趋势报告。
-        :param news_content: Hacker News 内容，通常为从网站抓取的新闻列表
-        :return: 生成的报告内容及保存路径
-        """
+        # 确保目录存在
+        base_dir = os.path.join("daily_progress", "hackernews")
+        if not os.path.exists(base_dir):
+            os.makedirs(base_dir)
+
+        # 生成原始信息的文件路径
+        date_str = date.today().isoformat()
+        news_file_path = os.path.join(base_dir, f"hackernews_{date_str}.md")
+
+        # 保存抓取的新闻信息到文件
+        with open(news_file_path, 'w+') as news_file:
+            news_file.write(news_content)
+        LOG.info(f"Hacker News 信息已保存到 {news_file_path}")
+
+        # 调用 LLM 生成报告
         report = self.llm.generate_hackernews_report(news_content)
-        
-        # 定义报告文件的保存路径，使用当前日期命名
-        report_file_path = f"reports/hackernews_report_{date.today().isoformat()}.md"
+
+        # 生成报告文件路径，加上 _report 后缀
+        report_file_path = os.path.join(base_dir, f"hackernews_{date_str}_report.md")
+
+        # 保存报告到文件
         with open(report_file_path, 'w+') as report_file:
-            report_file.write(report)  # 将生成的报告内容写入文件
-        
+            report_file.write(report)
         LOG.info(f"Hacker News 技术趋势报告已保存到 {report_file_path}")
+
         return report, report_file_path  # 返回报告内容及保存路径
