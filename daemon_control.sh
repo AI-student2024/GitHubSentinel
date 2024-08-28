@@ -11,6 +11,10 @@ LOG_FILE="./logs/$DAEMON_NAME.log"
 # 定义守护进程的 PID 文件路径，用于存储进程号
 PID_FILE="./run/$DAEMON_NAME.pid"
 
+# 确保日志和运行目录存在，如果不存在则创建它们
+mkdir -p ./logs
+mkdir -p ./run
+
 # 启动守护进程的函数
 start() {
     echo "Starting $DAEMON_NAME..."
