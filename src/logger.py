@@ -22,11 +22,11 @@ logger.add(sys.stderr, level="ERROR", format=log_format, colorize=True)
 
 # 配置日志输出到文件，日志文件大小达到 1 MB 时自动轮换，保留 10 个备份
 log_file_path = os.path.join(log_dir, "app.log")
-logger.add(log_file_path, rotation="1 MB", retention="10 files", level="DEBUG", format=log_format)
+logger.add(log_file_path, rotation="1 MB", retention=10, level="DEBUG", format=log_format)
 
 # 配置错误日志单独输出到 error.log 文件，文件大小达到 500 KB 时自动轮换，保留 5 个备份
 error_log_file_path = os.path.join(log_dir, "error.log")
-logger.add(error_log_file_path, level="ERROR", format=log_format, rotation="500 KB", retention="5 files")
+logger.add(error_log_file_path, level="ERROR", format=log_format, rotation="500 KB", retention=5)
 
 # 为 logger 设置别名 LOG，方便在其他模块中导入和使用
 LOG = logger

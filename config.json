@@ -4,12 +4,12 @@
 
     "email": {
         "_comment": "SMTP 服务器配置",
-        "smtp_server": "smtp.exmail.qq.com",  
+        "smtp_server": "smtp.qq.com",  
         "smtp_port": 465,
-        "from": "pjt@zaijidata.com",
+        "from": "122738347@qq.com",
         "_comment_password": "发件人邮箱密码，建议通过环境变量EMAIL_PASSWORD配置",
-        "password": "",
-        "to": "test@zaijidata.com"
+        "password": "${EMAIL_PASSWORD}",
+        "to": "feng-606@126.com"
     },
 
     "_comment_subscriptions": "GitHub 仓库订阅列表文件路径",
