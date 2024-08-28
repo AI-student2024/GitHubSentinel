@@ -1,3 +1,5 @@
+# 文件路径: src\gradio_server.py
+
 import gradio as gr  # 导入 gradio 库用于创建 GUI
 from config import Config  # 导入配置管理模块
 from github_client import GitHubClient  # 导入用于 GitHub API 操作的客户端
