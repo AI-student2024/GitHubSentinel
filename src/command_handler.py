@@ -58,7 +58,7 @@ class CommandHandler:
        
        # 生成hackernews报告命令
         parser_hackernews = subparsers.add_parser('hackernews', help='Generate hackernews report')
-        parser_hackernews.add_argument('--days', type=int, help='The number of days to generate report for')
+        parser_hackernews.add_argument('--numbers', type=int, help='The number of top stories to include in the report')
         parser_hackernews.set_defaults(func=self.generate_hackernews_report)
 
 
@@ -100,7 +100,7 @@ class CommandHandler:
         :param args: 命令行解析的参数
         """
         # 获取 Hacker News 最新的新闻内容
-        news_content = self.hackernews_client.fetch_top_stories(limit=args.days)
+        news_content = self.hackernews_client.fetch_top_stories(limit=args.numbers)
 
         # 调用 ReportGenerator 生成报告
         report, report_file_path = self.report_generator.generate_hackernews_report(news_content)
