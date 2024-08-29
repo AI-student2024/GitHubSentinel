@@ -1,3 +1,5 @@
+# 文件路径：src/subscription_manager.py
+
 import json
 
 class SubscriptionManager:

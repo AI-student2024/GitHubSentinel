@@ -1,3 +1,5 @@
+# 文件路径：\src\command_tool.py
+
 import shlex  # 导入shlex库，用于正确解析命令行输入
 
 from config import Config  # 从config模块导入Config类，用于配置管理
