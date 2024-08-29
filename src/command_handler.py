@@ -5,11 +5,12 @@ import argparse
 import argparse  # 导入argparse库，用于处理命令行参数解析
 
 class CommandHandler:
-    def __init__(self, github_client, subscription_manager, report_generator):
+    def __init__(self, github_client, subscription_manager, report_generator,hackernews_client):
         # 初始化CommandHandler，接收GitHub客户端、订阅管理器和报告生成器
         self.github_client = github_client
         self.subscription_manager = subscription_manager
         self.report_generator = report_generator
+        self.hackernews_client = hackernews_client
         self.parser = self.create_parser()  # 创建命令行解析器
 
     def create_parser(self):
@@ -54,6 +55,13 @@ class CommandHandler:
         parser_help = subparsers.add_parser('help', help='Show help message')
         parser_help.set_defaults(func=self.print_help)
 
+       
+       # 生成hackernews报告命令
+        parser_hackernews = subparsers.add_parser('hackernews', help='Generate hackernews report')
+        parser_hackernews.add_argument('--days', type=int, help='The number of days to generate report for')
+        parser_hackernews.set_defaults(func=self.generate_hackernews_report)
+
+
         return parser  # 返回配置好的解析器
 
     # 下面是各种命令对应的方法实现，每个方法都使用了相应的管理器来执行实际操作，并输出结果信息
@@ -85,3 +93,16 @@ class CommandHandler:
 
     def print_help(self, args=None):
         self.parser.print_help()  # 输出帮助信息
+
+    def generate_hackernews_report(self, args):
+        """
+        生成 Hacker News 报告。
+        :param args: 命令行解析的参数
+        """
+        # 获取 Hacker News 最新的新闻内容
+        news_content = self.hackernews_client.fetch_top_stories(limit=args.days)
+
+        # 调用 ReportGenerator 生成报告
+        report, report_file_path = self.report_generator.generate_hackernews_report(news_content)
+        
+        print(f"Hacker News report generated: {report_file_path}")
