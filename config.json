@@ -23,7 +23,7 @@
     "llm":{
         "model_type":"ollama",
         "openai_model_name":"gpt-4o-mini",
-        "ollama_model_name":"wangshenzhi/llama3-8b-chinese-chat-ollama-q4:latest",
+        "ollama_model_name":"llama3-chinese:latest",
         "ollama_api_url":"http://localhost:11434/api/chat"
     }
 }
