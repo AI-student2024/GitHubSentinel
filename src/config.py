@@ -39,3 +39,10 @@ class Config:
         self.subscriptions_file = config.get('subscriptions_file', 'subscriptions.json')
         self.github_progress_frequency_days = config.get('github_progress_frequency_days', 1)
         self.github_progress_execution_time = config.get('github_progress_execution_time', "08:00")
+
+        # 加载LLM相关配置
+        llm_config = config.get('llm', {}) # 获取LLM配置,如果键值不存在，则返回空字典
+        self.llm_model_type = llm_config.get('model_type', 'openai') # 获取模型类型，如果键值不存在，则返回默认值'openai'
+        self.openai_model_name = llm_config.get('openai_model_name', 'gpt-4o-mini')
+        self.ollama_model_name = llm_config.get('ollama_model_name', 'wangshenzhi/llama3-8b-chinese-chat-ollama-q4:latest')
+        self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')

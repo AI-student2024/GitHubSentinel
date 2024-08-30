@@ -19,5 +19,11 @@
     "github_progress_frequency_days": 1,
     "github_progress_execution_time": "08:00",
     "hackernews_frequency_days": 1,
-    "hackernews_execution_time": "08:00"
+    "hackernews_execution_time": "08:00",
+    "llm":{
+        "model_type":"ollama",
+        "openai_model_name":"gpt-4o-mini",
+        "ollama_model_name":"wangshenzhi/llama3-8b-chinese-chat-ollama-q4:latest",
+        "ollama_api_url":"http://localhost:11434/api/chat"
+    }
 }

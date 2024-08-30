@@ -14,7 +14,7 @@ from logger import LOG  # 导入日志记录器
 config = Config()
 github_client = GitHubClient(config.github_token)
 hackernews_client = HackerNewsClient()  # 新增 Hacker News 客户端实例
-llm = LLM()
+llm = LLM(config)
 report_generator = ReportGenerator(llm)
 subscription_manager = SubscriptionManager(config.subscriptions_file)
 notifier = Notifier(config.email)  # 创建 Notifier 实例用于发送邮件
