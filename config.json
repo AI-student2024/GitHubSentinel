@@ -18,12 +18,18 @@
         "ollama_model_name": "llama3-chinese:latest",
         "ollama_api_url": "http://localhost:11434/api/chat"
     },
-    "report_types": ["github", "hacker_news"],
+    "report_types": ["github", "hackernews"],
     "slack": {
         "webhook_url": "your_slack_webhook_url"    
     },
     "openai": {
         "api_key": "${WildtoOpenAI}",
         "base_url": "http://api.gptsapi.net/v1"
+    },
+    "hackernews":{
+        "base_url":"https://news.ycombinator.com/",
+        "hackernews_frequency_days": 1,
+        "hackernews_execution_time": "08:00",
+        "hackernews_max_items": 10
     }
 }

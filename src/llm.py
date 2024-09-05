@@ -102,7 +102,7 @@ class LLM:
         使用 Ollama LLaMA 模型生成报告。
         
         :param messages: 包含系统提示和用户内容的消息列表。
-        :param report_type: 报告类型（例如 "github" 或 "hacker_news"）。
+        :param report_type: 报告类型（例如 "github" 或 "hackernews"）。
         :return: 生成的报告内容。
         """
         LOG.info(f"使用 Ollama {self.config.ollama_model_name} 模型生成 {report_type} 报告。")
@@ -154,3 +154,16 @@ if __name__ == '__main__':
     # 生成 GitHub 报告
     github_report = llm.generate_report("github", markdown_content)
     print(github_report)
+
+
+    hackernews_content = """
+# Hacker News Daily Report
+
+## Top Stories
+- [LangChain: A Framework for Building Applications with LLMs](https://news.ycombinator.com/item?id=35796806)
+- [LangChain: A Framework for Building Applications with LLMs](https://news.ycombinator.com/item?id=35796806)
+- [LangChain: A Framework for Building Applications with LLMs](https://news.ycombinator.com/item?id=35796806)
+"""
+    # 生成 Hacker News 报告
+    hackernews_report = llm.generate_report("hackernews", hackernews_content)
+    print(hackernews_report)

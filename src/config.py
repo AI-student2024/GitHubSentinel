@@ -32,8 +32,15 @@ class Config:
             self.openai_base_url = openai_config.get('openai_base_url')
             
             # 加载报告类型配置
-            self.report_types = config.get('report_types', ["github", "hacker_news"])  # 默认报告类型
+            self.report_types = config.get('report_types', ["github", "hackernews"])  # 默认报告类型
             
             # 加载 Slack 配置
             slack_config = config.get('slack', {})
             self.slack_webhook_url = slack_config.get('webhook_url')
+
+            # Hacker News 相关配置
+            hackernews_config = config.get('hackernews', {})
+            self.hackernews_base_url = hackernews_config.get('base_url', 'https://news.ycombinator.com/')
+            self.hackernews_frequency_days = hackernews_config.get('hackernews_frequency_days', 1)
+            self.hackernews_execution_time = hackernews_config.get('hackernews_execution_time', "08:00")
+            self.hackernews_max_items = hackernews_config.get('hackernews_max_items', 10)

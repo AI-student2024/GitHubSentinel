@@ -9,7 +9,7 @@ class ReportGenerator:
         self.llm = llm  # 初始化时接受一个LLM实例，用于后续生成报告
 
     def generate_daily_report(self, markdown_file_path, report_type="github"):
-        # 读取 github 项目进展文件并调用 LLM 生成日报
+        # 读取{report_type}项目进展文件并调用 LLM 生成日报
         with open(markdown_file_path, 'r') as file:
             markdown_content = file.read()
 
@@ -19,7 +19,9 @@ class ReportGenerator:
         with open(report_file_path, 'w+') as report_file:
             report_file.write(report)  # 写入生成的报告
 
-        LOG.info(f"GitHub 项目报告已保存到 {report_file_path}")
+        LOG.info(f"{report_type} 项目报告已保存到 {report_file_path}")
 
         return report, report_file_path
+    
+    
 
