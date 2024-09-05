@@ -10,7 +10,7 @@ from github_client import GitHubClient  # 导入要测试的 GitHubClient 类
 
 class TestGitHubClient(unittest.TestCase):
     def setUp(self):
-        """
+        """  
         在每个测试方法之前运行，初始化测试环境。
         """
         self.token = "fake_token"  # 使用一个虚拟的 GitHub API 令牌

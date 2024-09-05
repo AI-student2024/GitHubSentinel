@@ -23,8 +23,13 @@ class Config:
             llm_config = config.get('llm', {})
             self.llm_model_type = llm_config.get('model_type', 'openai')
             self.openai_model_name = llm_config.get('openai_model_name', 'gpt-4o-mini')
-            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3')
+            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3-chinese:latest')
             self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')
+
+            # 加载 OpenAI 相关配置
+            openai_config = llm_config.get('openai', {})
+            self.openai_api_key = openai_config.get('openai_api_key')
+            self.openai_base_url = openai_config.get('openai_base_url')
             
             # 加载报告类型配置
             self.report_types = config.get('report_types', ["github", "hacker_news"])  # 默认报告类型
