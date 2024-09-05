@@ -1,15 +1,13 @@
-# src/command_handler.py
-
+# 文件路径：src/command_handler.py
 import argparse
 
-import argparse  # 导入argparse库，用于处理命令行参数解析
-
 class CommandHandler:
-    def __init__(self, github_client, subscription_manager, report_generator):
-        # 初始化CommandHandler，接收GitHub客户端、订阅管理器和报告生成器
+    def __init__(self, github_client, subscription_manager, report_generator, hackernews_client):
+        # 初始化 CommandHandler，接收 GitHub 客户端、订阅管理器和报告生成器
         self.github_client = github_client
         self.subscription_manager = subscription_manager
         self.report_generator = report_generator
+        self.hackernews_client = hackernews_client
         self.parser = self.create_parser()  # 创建命令行解析器
 
     def create_parser(self):
@@ -35,20 +33,33 @@ class CommandHandler:
         parser_list.set_defaults(func=self.list_subscriptions)
 
         # 导出每日进展命令
-        parser_export = subparsers.add_parser('export', help='Export daily progress')
+        parser_export = subparsers.add_parser('export-daily', help='Export Github project daily progress')
         parser_export.add_argument('repo', type=str, help='The repository to export progress from (e.g., owner/repo)')
         parser_export.set_defaults(func=self.export_daily_progress)
 
         # 导出特定日期范围进展命令
-        parser_export_range = subparsers.add_parser('export-range', help='Export progress over a range of dates')
+        parser_export_range = subparsers.add_parser('export-range', help='Export Github project progress over a range of dates')
         parser_export_range.add_argument('repo', type=str, help='The repository to export progress from (e.g., owner/repo)')
         parser_export_range.add_argument('days', type=int, help='The number of days to export progress for')
         parser_export_range.set_defaults(func=self.export_progress_by_date_range)
 
-        # 生成日报命令
-        parser_generate = subparsers.add_parser('generate', help='Generate daily report from markdown file')
-        parser_generate.add_argument('file', type=str, help='The markdown file to generate report from')
-        parser_generate.set_defaults(func=self.generate_daily_report)
+        # 生成 GitHub 日报命令
+        parser_generate = subparsers.add_parser('gen-github-daily', help='Generate Github report from markdown file')
+        parser_generate.add_argument('repo', type=str, help='The repository to generate report from (e.g., owner/repo)')
+        parser_generate.set_defaults(func=self.generate_github_daily_report)
+
+        # 生成 GitHub 多天报告命令
+        parser_generate = subparsers.add_parser('gen-github-range', help='Generate Github days report from markdown file')
+        parser_generate.add_argument('repo', type=str, help='The repository to generate report from (e.g., owner/repo)')
+        parser_generate.add_argument('days', type=int, help='The number of days to generate report for （e.g, 3）')
+        parser_generate.set_defaults(func=self.generate_github_range_report)
+
+
+
+
+        # 生成 Hacker News 报告命令
+        parser_hackernews = subparsers.add_parser('gen-hackernews', help='Generate hackernews report from markdown file')
+        parser_hackernews.set_defaults(func=self.generate_hackernews_report)  # 移除无效的参数定义
 
         # 帮助命令
         parser_help = subparsers.add_parser('help', help='Show help message')
@@ -79,9 +90,37 @@ class CommandHandler:
         self.github_client.export_progress_by_date_range(args.repo, days=args.days)
         print(f"Exported progress for the last {args.days} days for repository: {args.repo}")
 
-    def generate_daily_report(self, args):
-        self.report_generator.generate_daily_report(args.file)
-        print(f"Generated daily report from file: {args.file}")
+    def generate_github_daily_report(self, args):
+        """
+        生成 GitHub 日报报告。
+        :param args: 命令行解析的参数
+        """
+        markdown_file_path = self.github_client.export_daily_progress(args.repo)
+        report, report_file_path = self.report_generator.generate_daily_report(markdown_file_path, report_type="github")
+        print(f"GitHub report generated: {report_file_path}")
+
+    def generate_github_range_report(self, args):
+        """
+        生成 GitHub 多天报告。
+        :param args: 命令行解析的参数
+        """
+        markdown_file_path = self.github_client.export_progress_by_date_range(args.repo, args.days)
+        report, report_file_path = self.report_generator.generate_daily_report(markdown_file_path, report_type="github")
+        print(f"GitHub report generated: {report_file_path}")
+
 
     def print_help(self, args=None):
         self.parser.print_help()  # 输出帮助信息
+
+    def generate_hackernews_report(self, args):
+        """
+        生成 Hacker News 报告。
+        :param args: 命令行解析的参数
+        """
+        # 获取 Hacker News 最新的新闻内容
+        markdown_file_path = self.hackernews_client.fetch_top_stories()  # 移除传入参数
+
+        # 调用 ReportGenerator 生成报告
+        report, report_file_path = self.report_generator.generate_daily_report(markdown_file_path, report_type="hackernews")
+        
+        print(f"Hacker News report generated: {report_file_path}")
