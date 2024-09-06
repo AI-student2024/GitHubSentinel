@@ -13,7 +13,11 @@ class LLM:
         self.config = config
         self.model = config.llm_model_type.lower()  # 获取模型类型并转换为小写
         if self.model == "openai":
-            self.client = OpenAI()  # 创建OpenAI客户端实例
+            # 创建一个OpenAI客户端实例，用于访问OpenAI API
+            self.client = OpenAI(
+                                  api_key=config.openai_api_key, # 使用配置中的OpenAI API密钥
+                                  base_url=config.openai_api_base_url # 使用配置中的OpenAI API基础URL
+                                )  
         elif self.model == "ollama":
             self.api_url = config.ollama_api_url  # 设置Ollama API的URL
         else:

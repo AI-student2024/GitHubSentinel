@@ -1,21 +1,21 @@
 {
     "github": {
-        "token": "your_github_token",
+        "token": "${GITHUB_TOKEN}",
         "subscriptions_file": "subscriptions.json",
         "progress_frequency_days": 1,
         "progress_execution_time": "08:00"
     },
     "email":  {
-        "smtp_server": "smtp.exmail.qq.com",
+        "smtp_server": "smtp.qq.com",
         "smtp_port": 465,
-        "from": "pjt@zaijidata.com",
-        "password": "",
-        "to": "test@zaijidata.com"
+        "from": "122738347@qq.com",
+        "password": "${EMAIL_PASSWORD}",
+        "to": "feng-606@126.com"
     },
     "llm": {
-        "model_type": "ollama",
+        "model_type": "openai",
         "openai_model_name": "gpt-4o-mini",
-        "ollama_model_name": "llama3.1",
+        "ollama_model_name": "llama3-chinese:latest",
         "ollama_api_url": "http://localhost:11434/api/chat"
     },
     "report_types": [
@@ -25,5 +25,9 @@
     ],
     "slack": {
         "webhook_url": "your_slack_webhook_url"
+    },
+    "openai": {
+        "api_key": "${WildtoOpenAI}",
+        "base_url": "http://api.gptsapi.net/v1"
     }
 }

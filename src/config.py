@@ -21,9 +21,9 @@ class Config:
 
             # 加载 LLM 相关配置
             llm_config = config.get('llm', {})
-            self.llm_model_type = llm_config.get('model_type', 'openai')
+            self.llm_model_type = llm_config.get('model_type', 'ollama')
             self.openai_model_name = llm_config.get('openai_model_name', 'gpt-4o-mini')
-            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3')
+            self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3-chinese:latest')
             self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')
             
             # 加载报告类型配置
@@ -32,3 +32,15 @@ class Config:
             # 加载 Slack 配置
             slack_config = config.get('slack', {})
             self.slack_webhook_url = slack_config.get('webhook_url')
+
+            # 加载 OpenAI 相关配置
+            openai_config = llm_config.get('openai', {})
+            self.openai_api_key = openai_config.get('openai_api_key')
+            self.openai_api_base_url = openai_config.get('openai_base_url')
+
+            # Hacker News 相关配置
+            hackernews_config = config.get('hackernews', {})
+            self.hackernews_base_url = hackernews_config.get('base_url', 'https://news.ycombinator.com/')
+            self.hackernews_frequency_days = hackernews_config.get('hackernews_frequency_days', 1)
+            self.hackernews_execution_time = hackernews_config.get('hackernews_execution_time', "08:00")
+            self.hackernews_max_items = hackernews_config.get('hackernews_max_items', 10)
