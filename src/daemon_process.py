@@ -3,11 +3,12 @@ import time  # 导入time库，用于控制时间间隔
 import os   # 导入os模块用于文件和目录操作
 import signal  # 导入signal库，用于信号处理
 import sys  # 导入sys库，用于执行系统相关的操作
-from datetime import datetime  # 导入 datetime 模块用于获取当前日期
+from datetime import datetime,timedelta  # 导入 datetime 模块用于获取当前日期
 
 from config import Config  # 导入配置管理类
 from github_client import GitHubClient  # 导入GitHub客户端类，处理GitHub API请求
 from hacker_news_client import HackerNewsClient
+from bidder_client import BidderClient,ProjectQueryParams # 导入Bidder客户端类，处理Bidder API请求
 from notifier import Notifier  # 导入通知器类，用于发送通知
 from report_generator import ReportGenerator  # 导入报告生成器类
 from llm import LLM  # 导入语言模型类，可能用于生成报告内容
@@ -51,6 +52,34 @@ def hn_daily_job(hacker_news_client, report_generator, notifier):
     notifier.notify_hn_report(date, report)
     LOG.info(f"[定时任务执行完毕]")
 
+def bidder_list_job( bidder_client, report_generator, notifier):
+    LOG.info("[开始执行定时任务]Bidder list 项目报告")
+
+    # 获取当前日期，并格式化为 'YYYY-MM-DD' 格式
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+    
+    # 定义查询参数
+    keywords = "数据中心 人工智能 大模型"
+
+    query_params = ProjectQueryParams(
+    start_date=start_date,  # 查询的开始日期
+    end_date=end_date,    # 查询的结束日期
+    keyword=keywords,           # 查询的关键词
+    class_id="1",             # 项目类别 ID
+    search_mode="1",          # 查询模式
+    search_type="1",          # 查询类型
+    page_index="1",           # 页码
+    page_size="5",            # 每页项目数量
+    province_code="0",        # 省份编码
+    city_code=""              # 城市编码
+    )
+    _, markdown_file_path = bidder_client.query_project_list(query_params)
+    # 从Markdown文件自动生成投标项目报告
+    report, _ = report_generator.generate_bidder_list_report(markdown_file_path)
+    notifier.notify_bidder_list_report(report)
+    LOG.info(f"[定时任务执行完毕]")
+
 
 def main():
     # 设置信号处理器
@@ -59,6 +88,7 @@ def main():
     config = Config()  # 创建配置实例
     github_client = GitHubClient(config.github_token)  # 创建GitHub客户端实例
     hacker_news_client = HackerNewsClient() # 创建 Hacker News 客户端实例
+    bidder_client = BidderClient(config) # 创建Bidder客户端实例
     notifier = Notifier(config.email)  # 创建通知器实例
     llm = LLM(config)  # 创建语言模型实例
     report_generator = ReportGenerator(llm, config.report_types)  # 创建报告生成器实例
@@ -67,6 +97,7 @@ def main():
     # 启动时立即执行（如不需要可注释）
     # github_job(subscription_manager, github_client, report_generator, notifier, config.freq_days)
     hn_daily_job(hacker_news_client, report_generator, notifier)
+    bidder_list_job(bidder_client, report_generator, notifier)
 
     # 安排 GitHub 的定时任务
     schedule.every(config.freq_days).days.at(
@@ -78,6 +109,9 @@ def main():
 
     # 安排 hn_daily_job 每天早上10点执行一次
     schedule.every().day.at("10:00").do(hn_daily_job, hacker_news_client, report_generator, notifier)
+
+    # 安排 bidder_job 每周一0点执行一次
+    schedule.every().monday.at("00:00").do(bidder_list_job, bidder_client, report_generator, notifier)
 
     try:
         # 在守护进程中持续运行

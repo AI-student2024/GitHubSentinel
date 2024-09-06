@@ -81,12 +81,52 @@ class ReportGenerator:
         """
         聚合目录下所有以 '_topic.md' 结尾的 Markdown 文件内容，生成每日汇总报告的输入。
         """
+        # 检查目录是否存在，如果不存在则抛出警告或创建该目录
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path)
+            # 如果目录是新创建的，可能没有文件，因此返回空字符串
+            return ""
+       
         markdown_content = ""
         for filename in os.listdir(directory_path):
             if filename.endswith("_topic.md"):
                 with open(os.path.join(directory_path, filename), 'r') as file:
                     markdown_content += file.read() + "\n"
         return markdown_content
+
+    def generate_bidder_list_report(self, markdown_file_path):
+            """
+            生成招标项目列表的报告，并保存为 {original_filename}_report.md。
+            """
+            with open(markdown_file_path, 'r') as file:
+                markdown_content = file.read()
+
+            system_prompt = self.prompts.get("bidder_list_report")
+            report = self.llm.generate_report(system_prompt, markdown_content)
+            
+            report_file_path = os.path.splitext(markdown_file_path)[0] + "_report.md"
+            with open(report_file_path, 'w+') as report_file:
+                report_file.write(report)
+
+            LOG.info(f"Bidder list报告已保存到 {report_file_path}")
+            return report, report_file_path
+
+    def generate_bidder_details_report(self, markdown_file_path):
+            """
+            生成招标项目详情的报告，并保存为 {original_filename}_report.md。
+            """
+            with open(markdown_file_path, 'r') as file:
+                markdown_content = file.read()
+
+            system_prompt = self.prompts.get("bidder_details_report")
+            report = self.llm.generate_report(system_prompt, markdown_content)
+            
+            report_file_path = os.path.splitext(markdown_file_path)[0] + "_report.md"
+            with open(report_file_path, 'w+') as report_file:
+                report_file.write(report)
+
+            LOG.info(f"Bidder details报告已保存到 {report_file_path}")
+            return report, report_file_path
 
 
 if __name__ == '__main__':
@@ -98,8 +138,16 @@ if __name__ == '__main__':
     report_generator = ReportGenerator(llm, config.report_types)
 
     # hn_hours_file = "./hacker_news/2024-09-01/14.md"
-    hn_daily_dir = "./hacker_news/2024-09-01/"
+    hn_daily_dir = "./hacker_news/2024-09-06/"
 
     # report, report_file_path = report_generator.generate_hn_topic_report(hn_hours_file)
     report, report_file_path = report_generator.generate_hn_daily_report(hn_daily_dir)
+    LOG.debug(report)
+
+    bidder_list_dir="./bid_Info/bidder_list_2024-08-01_to_2024-09-01_20240907.md"
+    report, report_file_path = report_generator.generate_bidder_list_report(bidder_list_dir)
+    LOG.debug(report)
+
+    bidder_details_dir="./bid_Info/bidder_details_214527471_20240907.md"
+    report, report_file_path = report_generator.generate_bidder_details_report(bidder_details_dir)
     LOG.debug(report)

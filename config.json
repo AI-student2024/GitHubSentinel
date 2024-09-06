@@ -21,7 +21,9 @@
     "report_types": [
         "github",
         "hacker_news_hours_topic",
-        "hacker_news_daily_report"
+        "hacker_news_daily_report",
+        "bidder_list_report",
+        "bidder_details_report"
     ],
     "slack": {
         "webhook_url": "your_slack_webhook_url"
@@ -29,5 +31,9 @@
     "openai": {
         "api_key": "${WildtoOpenAI}",
         "base_url": "http://api.gptsapi.net/v1"
+    },
+    "bidder": {
+        "bidder_api_key": "${BID_TOKEN}",
+        "bidder_base_url": "https://23330.o.apispace.com/project-info/"
     }
 }

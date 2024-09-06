@@ -1,8 +1,10 @@
 import gradio as gr  # 导入gradio库用于创建GUI
+from datetime import datetime  # 导入datetime库用于日期和时间操作
 
 from config import Config  # 导入配置管理模块
 from github_client import GitHubClient  # 导入用于GitHub API操作的客户端
-from hacker_news_client import HackerNewsClient
+from hacker_news_client import HackerNewsClient # 导入用于Hacker News API操作的客户端
+from bidder_client import BidderClient,ProjectQueryParams # 导入用于Bidder API操作的客户端
 from report_generator import ReportGenerator  # 导入报告生成器模块
 from llm import LLM  # 导入可能用于处理语言模型的LLM类
 from subscription_manager import SubscriptionManager  # 导入订阅管理器
@@ -12,6 +14,7 @@ from logger import LOG  # 导入日志记录器
 config = Config()
 github_client = GitHubClient(config.github_token)
 hacker_news_client = HackerNewsClient() # 创建 Hacker News 客户端实例
+bidder_client = BidderClient(config) # 创建 Bidder 客户端实例
 subscription_manager = SubscriptionManager(config.subscriptions_file)
 
 def generate_github_report(model_type, model_name, repo, days):
@@ -46,6 +49,43 @@ def generate_hn_hour_topic(model_type, model_name):
     report, report_file_path = report_generator.generate_hn_topic_report(markdown_file_path)
 
     return report, report_file_path  # 返回报告内容和报告文件路径
+
+
+def generate_bidder_list_report(model_type, model_name, start_date, end_date,keywords):
+    config.llm_model_type = model_type
+
+    if model_type == "openai":
+        config.openai_model_name = model_name
+    else:
+        config.ollama_model_name = model_name
+
+    llm = LLM(config)  # 创建语言模型实例
+    report_generator = ReportGenerator(llm, config.report_types)  # 创建报告生成器实例
+
+    # 如果 start_date 和 end_date 是时间戳 (float)，将它们转换为 datetime 对象
+    formatted_start_date = datetime.fromtimestamp(start_date).strftime("%Y-%m-%d")
+    formatted_end_date = datetime.fromtimestamp(end_date).strftime("%Y-%m-%d")
+
+    # 定义一个函数，用于导出和生成指定时间范围内项目的进展报告
+    query_params = ProjectQueryParams(
+    start_date=formatted_start_date,  # 查询的开始日期
+    end_date=formatted_end_date,    # 查询的结束日期
+    keyword=keywords,           # 查询的关键词
+    class_id="1",             # 项目类别 ID
+    search_mode="1",          # 查询模式
+    search_type="1",          # 查询类型
+    page_index="1",           # 页码
+    page_size="5",            # 每页项目数量
+    province_code="0",        # 省份编码
+    city_code=""              # 城市编码
+    )
+ 
+    projects,raw_file_path = bidder_client.query_project_list(query_params)
+    report, report_file_path = report_generator.generate_bidder_list_report(raw_file_path)  # 生成并获取报告内容及文件路径
+
+    return report, report_file_path  # 返回报告内容和报告文件路径
+
+
 
 
 # 定义一个回调函数，用于根据 Radio 组件的选择返回不同的 Dropdown 选项
@@ -110,6 +150,37 @@ with gr.Blocks(title="GitHubSentinel") as demo:
         # 将按钮点击事件与导出函数绑定
         button.click(generate_hn_hour_topic, inputs=[model_type, model_name,], outputs=[markdown_output, file_output])
 
+
+    # 创建 Bidder项目列表 Tab
+    with gr.Tab("Bidder 项目列表"):
+
+        gr.Markdown("## Bidder 项目列表")   # 添加小标题
+
+        # 创建 Radio 组件
+        model_type = gr.Radio(["openai", "ollama"], label="模型类型", info="使用 OpenAI GPT API 或 Ollama 私有化模型服务")
+     
+        # 创建 Dropdown 组件
+        model_name = gr.Dropdown(choices=["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"], label="选择模型")
+
+        # 使用 radio 组件的值来更新 dropdown 组件的选项
+        model_type.change(fn=update_model_list, inputs=model_type, outputs=model_name)
+
+        # 创建日期和时间选择器组件
+        start_date = gr.DateTime(label="开始日期", info="选择查询的开始日期和时间")
+        end_date = gr.DateTime(label="结束日期", info="选择查询的结束日期和时间")
+
+        # 创建关键词输入框
+        keywords = gr.Textbox(label="关键词", placeholder="输入项目关键词")
+
+        # 使用按钮来生成报告
+        button = gr.Button("生成项目列表")
+
+        # 设置输出组件
+        markdown_output = gr.Markdown()
+        file_output = gr.File(label="下载报告")
+
+        # 将按钮点击事件与导出函数绑定
+        button.click(generate_bidder_list_report, inputs=[model_type, model_name, start_date, end_date, keywords], outputs=[markdown_output, file_output])
 
 
 if __name__ == "__main__":

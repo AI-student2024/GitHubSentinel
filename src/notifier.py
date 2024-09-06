@@ -31,6 +31,17 @@ class Notifier:
             self.send_email(subject, report)
         else:
             LOG.warning("邮件设置未配置正确，无法发送 Hacker News 报告通知")
+
+    def notify_bidder_list_report(self, report):
+        """
+        发送 Bidder List 报告邮件
+        :param report: 报告内容
+        """
+        if self.email_settings:
+            subject = f"[BidderList]] 招标项目列表"
+            self.send_email(subject, report)
+        else:
+            LOG.warning("邮件设置未配置正确，无法发送 Hacker News 报告通知")
     
     def send_email(self, subject, report):
         LOG.info(f"准备发送邮件:{subject}")
@@ -108,3 +119,22 @@ if __name__ == '__main__':
 
 """
     notifier.notify_hn_report("2024-09-01", hn_report)
+
+    # 测试 Bidder List 报告邮件通知
+    bidder_list_report = """
+# Bidder List 报告 (2024-09-01)
+
+## 新增项目
+- 项目A
+- 项目B
+
+## 更新项目
+- 项目C
+- 项目D
+
+## 删除项目
+- 项目E
+- 项目F
+
+"""
+    notifier.notify_bidder_list_report(bidder_list_report)

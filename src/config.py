@@ -44,3 +44,8 @@ class Config:
             self.hackernews_frequency_days = hackernews_config.get('hackernews_frequency_days', 1)
             self.hackernews_execution_time = hackernews_config.get('hackernews_execution_time', "08:00")
             self.hackernews_max_items = hackernews_config.get('hackernews_max_items', 10)
+            
+            # Bidder Info 相关配置
+            bidder_config = config.get('bidder', {})
+            self.bidder_api_key = bidder_config.get('bidder_api_key')
+            self.bidder_base_url = bidder_config.get('bidder_base_url','https://23330.o.apispace.com/project-info/')
