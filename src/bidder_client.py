@@ -85,7 +85,6 @@ class BidderClient:
         # 使用通用的API获取方法查询项目列表
         project_list_data = self.fetch_api_data("project-list", payload)
 
-
         # 打印返回的数据类型及内容，便于调试
         LOG.info(f"fetch_api_data 返回数据类型: {type(project_list_data)}")
         LOG.info(f"fetch_api_data 返回数据内容: {project_list_data}")
@@ -94,9 +93,6 @@ class BidderClient:
             LOG.error("未能获取项目列表。")
             return None
 
-        # 打印转换前的项目列表数据
-        LOG.info(f"转换前的项目列表数据: {project_list_data.get('data', [])}")
-        
         # 检查是否为字典并进行处理
         if isinstance(project_list_data, dict):
             LOG.info(f"转换前的项目列表数据: {project_list_data.get('data', [])}")
@@ -108,11 +104,10 @@ class BidderClient:
             LOG.error("项目列表数据格式无效。")
             return None
 
-
         # 生成 Project 对象列表，包含项目 id 和发布时间
         projects = []
         md_content = f"# 项目列表 ({query_params.start_date} - {query_params.end_date})\n\n"
-        for project in project_list_data.get("data", []):
+        for project in project_data:  # 这里使用 project_data 来生成项目列表
             projects.append(Project(
                 project_id=project.get('id', '无ID'),
                 publish_time=project.get('publish', '无发布时间'),
@@ -133,7 +128,7 @@ class BidderClient:
         file_path = self.save_md_file(md_content, filename)
         LOG.info(f"项目列表已保存至: {file_path}")
         
-        return projects,file_path # 返回包含项目信息的对象列表
+        return projects, file_path  # 返回包含项目信息的对象列表
 
     def query_project_full_details(self, project: Project):
         """
