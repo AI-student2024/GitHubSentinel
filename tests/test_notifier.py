@@ -38,7 +38,13 @@ class TestNotifier(unittest.TestCase):
 
         ## Top 1：硬盘驱动器的讨论引发热门讨论
         """
+        self.test_bidder_list_report = """
+        # Bidder List 报告 (2024-09-01)
 
+        ## 新增项目
+        - 项目A
+        - 项目B
+        """
         # 设置日志捕获
         self.log_capture = StringIO()
         self.capture_id = LOG.add(self.log_capture, level="INFO")
@@ -74,6 +80,18 @@ class TestNotifier(unittest.TestCase):
         log_content = self.log_capture.getvalue()
         self.assertIn("邮件发送成功！", log_content)
 
+    @patch('smtplib.SMTP_SSL')
+    def test_notify_bidder_list_report_success(self, mock_smtp):
+        """
+        测试在邮件配置正确的情况下，Bidder List 报告邮件是否成功发送，并检查日志输出。
+        """
+        # 执行邮件发送
+        self.notifier.notify_bidder_list_report(self.test_bidder_list_report)
+
+        # 获取并检查日志内容
+        log_content = self.log_capture.getvalue()
+        self.assertIn("邮件发送成功！", log_content)
+
     def test_notify_without_email_settings(self):
         """
         测试当邮件设置未正确配置时，Notifier 是否不会发送邮件并记录相应的警告日志。
@@ -83,7 +101,6 @@ class TestNotifier(unittest.TestCase):
 
         log_content = self.log_capture.getvalue()
         self.assertIn("邮件设置未配置正确", log_content)
-
 
 if __name__ == '__main__':
     unittest.main()

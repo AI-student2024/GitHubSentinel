@@ -46,14 +46,18 @@ class TestLLM(unittest.TestCase):
         """
         测试 Ollama API 返回的响应结构无效时的错误处理路径。
         """
-        # 模拟 Ollama API 的无效响应
+        # 模拟 Ollama API 的无效响应，不包含 'expected_key'
         mock_response = MagicMock()
         mock_response.json.return_value = {"invalid_key": "no_content_here"}
         mock_post.return_value = mock_response
 
+        # 验证在无效响应时，是否会抛出 ValueError
         with self.assertRaises(ValueError):
             self.llm.generate_report(self.system_prompt, self.github_content)
+
+        # 验证错误日志是否记录了正确的错误信息
         mock_log_error.assert_called_with("生成报告时发生错误：Ollama API 返回的响应结构无效")
+
 
 
     @patch('llm.LOG.error')
