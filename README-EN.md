@@ -15,34 +15,38 @@
 ## Table of Contents
 
 - [GitHub Sentinel](#github-sentinel)
-- [Key Features](#key-features)
-- [Quick Start](#quick-start)
-  - [1. Install Dependencies](#1-install-dependencies)
-  - [2. Configure the Application](#2-configure-the-application)
-  - [3. How to Run](#3-how-to-run)
-    - [A. Run as a Command Line Tool](#a-run-as-a-command-line-tool)
-    - [B. Run as a Background Service](#b-run-as-a-background-service)
-    - [C. Run as a Gradio Server](#c-run-as-a-gradio-server)
-- [Ollama Installation and Service Deployment](#ollama-installation-and-service-deployment)
-- [Unit Testing](#unit-testing)
-  - [Unit Testing and Validation Script `validate_tests.sh`](#unit-testing-and-validation-script-validate_testssh)
-    - [Purpose](#purpose)
-    - [Functionality](#functionality)
-- [Building and Validating with Docker](#building-and-validating-with-docker)
-  - [1. `Dockerfile`](#1-dockerfile)
-    - [Purpose](#purpose)
-    - [Key Steps](#key-steps)
-  - [2. `build_image.sh`](#2-build_imagesh)
-    - [Purpose](#purpose)
-    - [Functionality](#functionality)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+  - [Table of Contents](#table-of-contents)
+    - [base Features](#base-features)
+    - [Extended Features](#extended-features)
+  - [Quick Start](#quick-start)
+    - [1. Install Dependencies](#1-install-dependencies)
+    - [2. Configure the Application](#2-configure-the-application)
+    - [3. How to Run](#3-how-to-run)
+      - [A. Run as a Command Line Tool](#a-run-as-a-command-line-tool)
+      - [B. Run as a Background Service](#b-run-as-a-background-service)
+      - [C. Run as a Gradio Server](#c-run-as-a-gradio-server)
+  - [Ollama Installation and Service Deployment](#ollama-installation-and-service-deployment)
+    - [Ollama Brief Official Installation](#ollama-brief-official-installation)
+  - [Unit Testing](#unit-testing)
+    - [Unit Testing and Validation Script `validate_tests.sh`](#unit-testing-and-validation-script-validate_testssh)
+      - [Purpose](#purpose)
+      - [Functionality](#functionality)
+  - [Building and Validating with Docker](#building-and-validating-with-docker)
+    - [1. `Dockerfile`](#1-dockerfile)
+      - [Purpose](#purpose-1)
+      - [Key Steps](#key-steps)
+    - [2. `build_image.sh`](#2-build_imagesh)
+      - [Purpose](#purpose-2)
+      - [Functionality](#functionality-1)
+      - [Usage Example](#usage-example)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Contact](#contact)
 
 
 GitHub Sentinel is an `AI Agent` designed for the era of large language models (LLMs), specializing in intelligent information retrieval and high-value content extraction. It is tailored for users with high-frequency and large-scale information needs, such as open-source enthusiasts, individual developers, and investors.
 
-### Key Features
+### base Features
 
 - **Subscription Management**: Easily manage and track your subscribed GitHub repositories.
 - **Update Retrieval**: Automatically fetch and aggregate the latest updates from your subscribed repositories, including commits, issues, and pull requests.
@@ -54,7 +58,9 @@ GitHub Sentinel is an `AI Agent` designed for the era of large language models (
 - **Containerization**: The project supports Docker build and containerized deployment, allowing quick and easy setup in different environments.
 - **Continuous Integration**: Comprehensive unit tests are implemented, facilitating the configuration of production-level CI/CD pipelines to ensure project stability and high-quality delivery.
 
-GitHub Sentinel not only helps users automatically track and analyze the progress of `GitHub open-source projects` but also extends its capabilities to other information sources, such as trending topics on `Hacker News`, providing a more comprehensive approach to information extraction and analysis.
+### Extended Features
+- **`Hacker News` Information Mining**: GitHub Sentinel not only helps users automatically track and analyze the latest developments in `GitHub open source projects`, but it can also be quickly expanded to other information channels, such as trending topics on `Hacker News`, providing more comprehensive information mining and analysis capabilities.
+- **Bidding Updates**: GitHub Sentinel can also mine and analyze information from `Bidding`, helping users stay informed and understand the latest trends and developments in the `Bidding` domain.
 
 
 ## Quick Start
