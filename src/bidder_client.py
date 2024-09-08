@@ -35,6 +35,7 @@ class BidderClient:
         初始化 BidderClient 类，设置 API 基础 URL 和请求头部
         """
         self.config = config
+        print(f"Config Bidder API Key: {config.bidder_api_key}")  # 调试输出
         self.api_key = os.getenv('BID_TOKEN', config.bidder_api_key)
         self.base_url = config.bidder_base_url
         self.headers = {

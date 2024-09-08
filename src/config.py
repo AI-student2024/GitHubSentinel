@@ -24,7 +24,16 @@ class Config:
             self.llm_model_type = llm_config.get('model_type', 'ollama')
             self.openai_model_name = llm_config.get('openai_model_name', 'gpt-4o-mini')
             self.ollama_model_name = llm_config.get('ollama_model_name', 'llama3-chinese:latest')
-            self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')
+
+            if os.path.exists('/.dockerenv'):
+                # Docker 容器中使用 host.docker.internal
+                self.ollama_api_url = 'http://host.docker.internal:11434/api/chat'
+            else:
+                # 本地环境使用 localhost
+                self.ollama_api_url = 'http://localhost:11434/api/chat'
+
+            # self.ollama_api_url = llm_config.get('ollama_api_url', 'http://localhost:11434/api/chat')
+            
             
             # 加载报告类型配置
             self.report_types = config.get('report_types', ["github", "hacker_news"])  # 默认报告类型
@@ -45,7 +54,9 @@ class Config:
             self.hackernews_execution_time = hackernews_config.get('hackernews_execution_time', "08:00")
             self.hackernews_max_items = hackernews_config.get('hackernews_max_items', 10)
             
+
             # Bidder Info 相关配置
             bidder_config = config.get('bidder', {})
-            self.bidder_api_key = bidder_config.get('bidder_api_key')
-            self.bidder_base_url = bidder_config.get('bidder_base_url','https://23330.o.apispace.com/project-info/')
+            self.bidder_api_key = os.getenv('BID_TOKEN', bidder_config.get('bidder_api_key', 'default_bidder_api_key'))
+            self.bidder_base_url = bidder_config.get('bidder_base_url', 'https://23330.o.apispace.com/project-info/')
+

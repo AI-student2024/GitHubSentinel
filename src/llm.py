@@ -84,16 +84,23 @@ class LLM:
             response = requests.post(self.api_url, json=payload)  # 发送POST请求到Ollama API
             response_data = response.json()
 
-            # 调试输出查看完整的响应结构
-            LOG.debug("Ollama 响应: {}", response_data)
+          
+            # 打印完整的响应结构以便调试
+            LOG.debug("Ollama 完整响应: %s", response_data)
 
-            # 直接从响应数据中获取 content
-            message_content = response_data.get("message", {}).get("content", None)
-            if message_content:
-                return message_content  # 返回生成的报告内容
-            else:
-                LOG.error("无法从响应中提取报告内容。")
-                raise ValueError("Ollama API 返回的响应结构无效")
+            # 从响应数据中获取message
+            message = response_data.get("message")
+            if not message:
+               LOG.error(f"Ollama API 响应中缺少 'message' 键: {response_data}")
+               raise ValueError("Ollama API 返回的响应结构无效")
+            
+            # 从message中获取content
+            message_content = message.get("content")
+            if not message_content:
+               LOG.error(f"Ollama API 响应中缺少 'content' 键: {message}")
+               raise ValueError("Ollama API 返回的响应结构无效")
+            return message_content
+
         except Exception as e:
             LOG.error(f"生成报告时发生错误：{e}")
             raise

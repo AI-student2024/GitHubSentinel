@@ -13,7 +13,7 @@
         "to": "feng-606@126.com"
     },
     "llm": {
-        "model_type": "openai",
+        "model_type": "ollama",
         "openai_model_name": "gpt-4o-mini",
         "ollama_model_name": "llama3-chinese:latest",
         "ollama_api_url": "http://localhost:11434/api/chat"
