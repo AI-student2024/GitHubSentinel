@@ -98,6 +98,7 @@ def main():
     # github_job(subscription_manager, github_client, report_generator, notifier, config.freq_days)
     hn_daily_job(hacker_news_client, report_generator, notifier)
     bidder_list_job(bidder_client, report_generator, notifier)
+    
 
     # 安排 GitHub 的定时任务
     schedule.every(config.freq_days).days.at(
