@@ -70,12 +70,12 @@ def generate_bidder_list_report(model_type, model_name, start_date, end_date,key
     query_params = ProjectQueryParams(
     start_date=formatted_start_date,  # 查询的开始日期
     end_date=formatted_end_date,    # 查询的结束日期
-    keyword=keywords,           # 查询的关键词
+    keyword=keywords,           # 查询的关键词:搜索关键词。多个关键词搜索：且关系（关键词之间空格隔开）；或关系（关键词1|关键词2|关键词3，同时 searchType 参数选择智能订阅搜索或精准订阅搜索）
     class_id="1",             # 项目类别 ID
-    search_mode="1",          # 查询模式
-    search_type="1",          # 查询类型
+    search_mode="1",          # 查询模式:搜索模(1：全部，2：标题，3：内容)
+    search_type="1",          # 查询类型:搜索业务类别(1：智能订阅搜索，2：精准订阅搜索，3：高级定义条件搜索)
     page_index="1",           # 页码
-    page_size="5",            # 每页项目数量
+    page_size="10",           # 每页项目数量
     province_code="0",        # 省份编码
     city_code=""              # 城市编码
     )

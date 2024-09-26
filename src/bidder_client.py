@@ -236,7 +236,7 @@ if __name__ == "__main__":
     search_mode="1",          # 查询模式
     search_type="1",          # 查询类型
     page_index="1",           # 页码
-    page_size="5",            # 每页项目数量
+    page_size="10",           # 每页项目数量
     province_code="0",        # 省份编码
     city_code=""              # 城市编码
     )
